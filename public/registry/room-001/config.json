@@ -1,0 +1,26 @@
+{
+  "room_display_name": "Welcome Room",
+  "owner": "Building Admin",
+  "background_image": "/registry/room-001/background.jpeg",
+  "hotspots": [
+    {
+      "id": "welcome-book",
+      "label": "Welcome Book",
+      "x": 7,
+      "y": 68,
+      "width": 12,
+      "height": 15,
+      "action": "open_modal",
+      "modal": "welcome_guide"
+    },
+    {
+      "id": "exit-door",
+      "label": "Exit to Floor Plan",
+      "x": 79,
+      "y": 18,
+      "width": 13,
+      "height": 65,
+      "action": "navigate_floor"
+    }
+  ]
+}

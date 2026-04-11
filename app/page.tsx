@@ -56,7 +56,17 @@ export default function OpenRoom() {
   };
 
   if (activeRoom) {
-    return <RoomView room={activeRoom} myId={myId} onBack={handleBack} />;
+    const isWelcomeRoom = activeRoom.grid_x === 0 && activeRoom.grid_y === 0;
+    if (isWelcomeRoom) {
+      return <RoomView onBack={handleBack} registryId="room-001" />;
+    }
+    // Other rooms: coming soon
+    return (
+      <div className="h-screen w-screen bg-slate-100 flex flex-col items-center justify-center gap-4">
+        <p className="text-slate-500 text-sm">This room is under construction.</p>
+        <button onClick={handleBack} className="text-indigo-600 font-bold hover:underline text-sm">← Back to Floor Plan</button>
+      </div>
+    );
   }
 
   // --- DYNAMIC FLOORPLAN LOGIC ---
