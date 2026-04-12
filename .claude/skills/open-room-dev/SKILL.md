@@ -158,9 +158,8 @@ Return the full PR URL (e.g. `https://github.com/alyssafuward/open-room-open-sou
 Your PR is open! Here's what happens next:
 
 1. Vercel will automatically build a **preview** of your changes. You'll see a link appear in the PR — click it to see exactly how your changes will look on the live site.
-2. Once you're happy with the preview, the maintainer will review and merge the PR.
-3. When it's merged, **Vercel will automatically deploy** your changes to the live site within a minute or two.
+2. The maintainer will review your PR. If it looks good, they'll merge it and your changes will go live automatically. If they want something adjusted, they'll request changes and you can keep working on the same branch — push again and the preview will update.
 
-If you want to make more changes before it's merged, just keep working on the same branch — push again and the preview will update automatically.
+You're done for now! 🎉
 
 ---
