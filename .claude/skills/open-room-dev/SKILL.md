@@ -110,11 +110,13 @@ npm run dev
 
 ## Step 5: Save as you go
 
-Offer to commit at natural stopping points — after a meaningful chunk of work, not after every file:
+Offer to commit at natural stopping points — after a meaningful chunk of work, not after every file.
+
+A **commit** is a saved snapshot of your changes. Think of it like hitting Save on a document, except it's permanent and tracked — you can always go back to any commit. Each commit has a short message describing what changed.
 
 ---
 
-Want me to save your progress? I'll stage the changed files and commit with a short message.
+Want me to save your progress? I'll take a snapshot of your changes with a short description of what you did.
 
 ---
 
@@ -135,7 +137,9 @@ git push -u origin <branch-name>
 
 ## Step 6: Open a PR
 
-When they're happy with the changes, offer to open a pull request:
+When they're happy with the changes, offer to open a pull request.
+
+A **pull request (PR)** is a formal request to add your changes to the main project. It gives the maintainer a chance to review what you've built before it goes live. You'll get a link where you can see all your changes, leave comments, and track the review.
 
 ---
 
