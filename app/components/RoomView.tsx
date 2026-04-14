@@ -54,7 +54,7 @@ export default function RoomView({ onBack, registryId, room }: {
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const showGrid = searchParams.get('grid') === '1';
+  const [builderMode, setBuilderMode] = useState(searchParams.get('grid') === '1');
   const [pageStack, setPageStack] = useState<RoomConfig[]>([]);
   const [config, setConfig] = useState<RoomConfig | null>(null);
   const [configError, setConfigError] = useState(false);
@@ -235,17 +235,38 @@ export default function RoomView({ onBack, registryId, room }: {
           </button>
         ))}
 
-        {/* Debug grid overlay — visible when ?grid=1 */}
-        {showGrid && (
+        {/* Builder mode toggle — bottom left */}
+        <button
+          onClick={() => setBuilderMode(v => !v)}
+          className={`absolute bottom-4 left-4 w-8 h-8 rounded-full shadow-md border flex items-center justify-center text-base transition-all ${builderMode ? 'bg-amber-400 border-amber-500' : 'bg-white/90 backdrop-blur-sm border-slate-200'}`}
+          aria-label="Toggle builder mode"
+          title="Builder mode"
+        >
+          🔨
+        </button>
+
+        {/* Debug grid overlay — visible in builder mode */}
+        {builderMode && (
           <div className="absolute inset-0 pointer-events-none">
-            {Array.from({ length: 11 }, (_, i) => i * 10).map(pct => (
+            {Array.from({ length: 21 }, (_, i) => i * 5).map(pct => (
               <div key={`v${pct}`} className="absolute top-0 bottom-0 border-l border-white/40" style={{ left: `${pct}%` }}>
                 <span className="absolute top-1 left-0.5 text-white text-[9px] font-bold bg-black/50 px-0.5 rounded leading-tight">{pct}</span>
               </div>
             ))}
-            {Array.from({ length: 11 }, (_, i) => i * 10).map(pct => (
+            {Array.from({ length: 21 }, (_, i) => i * 5).map(pct => (
               <div key={`h${pct}`} className="absolute left-0 right-0 border-t border-white/40" style={{ top: `${pct}%` }}>
                 <span className="absolute top-0.5 left-1 text-white text-[9px] font-bold bg-black/50 px-0.5 rounded leading-tight">{pct}</span>
+              </div>
+            ))}
+            {config.hotspots.map(h => (
+              <div
+                key={`dbg-${h.id}`}
+                className="absolute border-2 border-yellow-400 bg-yellow-400/20"
+                style={{ left: `${h.x}%`, top: `${h.y}%`, width: `${h.width}%`, height: `${h.height}%` }}
+              >
+                <span className="absolute top-0.5 left-0.5 text-yellow-300 text-[9px] font-bold bg-black/60 px-0.5 rounded leading-tight">
+                  {h.x},{h.y} {h.width}×{h.height}
+                </span>
               </div>
             ))}
           </div>
