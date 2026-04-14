@@ -5,25 +5,25 @@
   "hide_back_button": false,
   "hotspots": [
     {
-      "id": "door-100-days",
-      "label": "100 Days Room",
+      "id": "door-ai-superbuilders",
+      "label": "AI Superbuilders",
       "x": 10,
       "y": 5,
       "width": 15,
       "height": 25,
       "action": "navigate_page",
-      "path": "pages/100-days/config.json",
+      "path": "pages/ai-superbuilders/config.json",
       "hint": true
     },
     {
-      "id": "door-ai-superbuilders",
-      "label": "AI Superbuilders",
+      "id": "door-100-days",
+      "label": "100 Days Room",
       "x": 47.5,
       "y": 35,
       "width": 12.5,
       "height": 20,
       "action": "navigate_page",
-      "path": "pages/ai-superbuilders/config.json",
+      "path": "pages/100-days/config.json",
       "hint": true
     }
   ]

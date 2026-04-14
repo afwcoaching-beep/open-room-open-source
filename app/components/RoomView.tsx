@@ -235,15 +235,17 @@ export default function RoomView({ onBack, registryId, room }: {
           </button>
         ))}
 
-        {/* Builder mode toggle — bottom left */}
-        <button
-          onClick={() => setBuilderMode(v => !v)}
-          className={`absolute bottom-4 left-4 w-8 h-8 rounded-full shadow-md border flex items-center justify-center text-base transition-all ${builderMode ? 'bg-amber-400 border-amber-500' : 'bg-white/90 backdrop-blur-sm border-slate-200'}`}
-          aria-label="Toggle builder mode"
-          title="Builder mode"
-        >
-          🔨
-        </button>
+        {/* Builder mode toggle — bottom left, main room only */}
+        {pageStack.length === 0 && (
+          <button
+            onClick={() => setBuilderMode(v => !v)}
+            className={`absolute bottom-4 left-4 w-8 h-8 rounded-full shadow-md border flex items-center justify-center text-base transition-all ${builderMode ? 'bg-amber-400 border-amber-500' : 'bg-white/90 backdrop-blur-sm border-slate-200'}`}
+            aria-label="Toggle builder mode"
+            title="Builder mode"
+          >
+            🔨
+          </button>
+        )}
 
         {/* Debug grid overlay — visible in builder mode */}
         {builderMode && (
