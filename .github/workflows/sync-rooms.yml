@@ -204,5 +204,53 @@ jobs:
             .catch(err => { console.error(err); process.exit(1); });
           EOF
 
-      # Mirror prod → dev step removed: new reservations are mirrored automatically
-      # via the mirror-to-dev Edge Function on INSERT
+      - name: Reconcile dev DB against registry
+        env:
+          SUPABASE_DEV_URL: ${{ secrets.SUPABASE_DEV_URL }}
+          SUPABASE_DEV_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_DEV_SERVICE_ROLE_KEY }}
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+
+          const registryDir = 'public/registry';
+
+          async function reconcileDev() {
+            const res = await fetch(
+              `${process.env.SUPABASE_DEV_URL}/rest/v1/rooms?registry_id=not.is.null&select=registry_id`,
+              {
+                headers: {
+                  'apikey': process.env.SUPABASE_DEV_SERVICE_ROLE_KEY,
+                  'Authorization': `Bearer ${process.env.SUPABASE_DEV_SERVICE_ROLE_KEY}`,
+                },
+              }
+            );
+            if (!res.ok) { console.error('Failed to fetch dev rooms', await res.json()); process.exit(1); }
+            const rooms = await res.json();
+
+            const toDelete = rooms
+              .map(r => r.registry_id)
+              .filter(id => !fs.existsSync(`${registryDir}/${id}/config.json`));
+
+            if (!toDelete.length) { console.log('Dev in sync — nothing to delete.'); return; }
+
+            await Promise.all(toDelete.map(async id => {
+              const del = await fetch(
+                `${process.env.SUPABASE_DEV_URL}/rest/v1/rooms?registry_id=eq.${encodeURIComponent(id)}`,
+                {
+                  method: 'DELETE',
+                  headers: {
+                    'apikey': process.env.SUPABASE_DEV_SERVICE_ROLE_KEY,
+                    'Authorization': `Bearer ${process.env.SUPABASE_DEV_SERVICE_ROLE_KEY}`,
+                    'Prefer': 'return=representation',
+                  },
+                }
+              );
+              if (!del.ok) { console.error(`Failed to delete from dev: ${id}`, await del.json()); process.exit(1); }
+              console.log(`✓ ${id} deleted from dev`);
+            }));
+          }
+
+          reconcileDev().catch(err => { console.error(err); process.exit(1); });
+          EOF
+
+      # New reservations are mirrored to dev automatically via the mirror-to-dev Edge Function on INSERT
