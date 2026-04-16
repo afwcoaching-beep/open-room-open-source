@@ -7,8 +7,6 @@ import ReservationModal from './components/ReservationModal';
 import FloorPlanCanvas from './components/FloorPlanCanvas';
 import LocalPreview from './components/LocalPreview';
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-
 const COMMON_ROOM_SLUG = 'common';
 
 function roomSlug(room: any): string | null {
@@ -17,6 +15,7 @@ function roomSlug(room: any): string | null {
 }
 
 function OpenRoomInner() {
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeSlug = searchParams.get('room');
