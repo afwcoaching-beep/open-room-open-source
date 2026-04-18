@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import DiagramModal from './DiagramModal';
@@ -69,6 +69,8 @@ export default function RoomView({ onBack, registryId, room }: {
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [imgAspect, setImgAspect] = useState<number | null>(null);
+  const [containerSize, setContainerSize] = useState<{ w: number; h: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [editRequested, setEditRequested] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState(false);
@@ -181,6 +183,37 @@ export default function RoomView({ onBack, registryId, room }: {
     );
   }
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(entries => {
+      const { width, height } = entries[0].contentRect;
+      setContainerSize({ w: width, h: height });
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  function hotspotStyle(h: Hotspot): React.CSSProperties {
+    if (!containerSize || !imgAspect) {
+      return { left: `${h.x}%`, top: `${h.y}%`, width: `${h.width}%`, height: `${h.height}%` };
+    }
+    const { w, h: ch } = containerSize;
+    const ca = w / ch;
+    let rW: number, rH: number, ox: number, oy: number;
+    if (ca > imgAspect) {
+      rW = w; rH = w / imgAspect; ox = 0; oy = -(rH - ch) / 2;
+    } else {
+      rH = ch; rW = ch * imgAspect; ox = -(rW - w) / 2; oy = 0;
+    }
+    return {
+      left: `${ox + (h.x / 100) * rW}px`,
+      top: `${oy + (h.y / 100) * rH}px`,
+      width: `${(h.width / 100) * rW}px`,
+      height: `${(h.height / 100) * rH}px`,
+    };
+  }
+
   if (!config) {
     return (
       <div className="min-h-screen w-screen bg-stone-100 flex flex-col items-center justify-center gap-4">
@@ -191,19 +224,12 @@ export default function RoomView({ onBack, registryId, room }: {
   }
 
   return (
-    <main className="h-screen w-screen overflow-hidden bg-stone-100 flex items-center justify-center">
-      <div
-        className="relative"
-        style={imgAspect
-          ? { aspectRatio: String(imgAspect), maxHeight: '100vh', maxWidth: '100%', width: `${imgAspect * 100}vh` }
-          : { width: '100%', height: '100%' }
-        }
-      >
+    <main className="h-screen w-screen overflow-hidden bg-stone-100">
+      <div ref={containerRef} className="relative w-full h-full">
         <img
           src={config.background_image}
           alt={config.room_display_name}
-          className="w-full h-full block"
-          style={{ objectFit: 'fill' }}
+          className="w-full h-full object-cover block"
           onLoad={(e) => {
             const img = e.currentTarget;
             setImgAspect(img.naturalWidth / img.naturalHeight);
@@ -216,12 +242,7 @@ export default function RoomView({ onBack, registryId, room }: {
           <div
             key={`img-${hotspot.id}`}
             className="absolute pointer-events-none"
-            style={{
-              left: `${hotspot.x}%`,
-              top: `${hotspot.y}%`,
-              width: `${hotspot.width}%`,
-              height: `${hotspot.height}%`,
-            }}
+            style={hotspotStyle(hotspot)}
           >
             <img
               src={hotspot.image_url}
@@ -238,13 +259,7 @@ export default function RoomView({ onBack, registryId, room }: {
             key={hotspot.id}
             onClick={() => handleHotspot(hotspot)}
             className={`absolute rounded-lg group transition-colors hover:bg-white/25 ${hotspot.hint ? 'bg-white/10 ring-1 ring-white/30' : ''}`}
-            style={{
-              left: `${hotspot.x}%`,
-              top: `${hotspot.y}%`,
-              width: `${hotspot.width}%`,
-              height: `${hotspot.height}%`,
-              cursor: 'pointer',
-            }}
+            style={{ ...hotspotStyle(hotspot), cursor: 'pointer' }}
             aria-label={hotspot.label}
           >
             <span className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black/70 text-white text-[11px] font-bold rounded-full whitespace-nowrap transition-opacity pointer-events-none ${hotspot.hint ? 'opacity-60 group-hover:opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
