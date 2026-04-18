@@ -137,7 +137,11 @@ export default function RoomView({ onBack, registryId, room }: {
     } else if (hotspot.action === 'open_url' && hotspot.url) {
       window.open(hotspot.url, '_blank', 'noopener,noreferrer');
     } else if (hotspot.action === 'open_image' && hotspot.image_url) {
-      setActiveImage({ url: hotspot.image_url, label: hotspot.label });
+      if (hotspot.url) {
+        window.open(hotspot.url, '_blank', 'noopener,noreferrer');
+      } else {
+        setActiveImage({ url: hotspot.image_url, label: hotspot.label });
+      }
     } else if (hotspot.action === 'open_modal') {
       if (hotspot.modal === 'registry') {
         openRegistry();
@@ -374,11 +378,7 @@ export default function RoomView({ onBack, registryId, room }: {
           onClick={() => setActiveImage(null)}
         >
           <div className="relative max-w-2xl w-full" onClick={e => e.stopPropagation()}>
-            <img
-              src={activeImage.url}
-              alt={activeImage.label}
-              className="w-full h-auto rounded-2xl shadow-2xl"
-            />
+            <img src={activeImage.url} alt={activeImage.label} className="w-full h-auto rounded-2xl shadow-2xl" />
             <p className="text-white/70 text-xs text-center mt-3">{activeImage.label}</p>
           </div>
         </div>
