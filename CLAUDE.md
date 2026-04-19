@@ -31,8 +31,8 @@ If no issue is found, they haven't reserved yet — tell them to visit the live 
 5. **Background image** — help them choose or generate one. Landscape images work best. Remind them: JPEG or WebP, max 200KB
 6. **config.json** — fill in room_display_name, owner, and background_image. Ask if they want hotspots or links — both are optional.
 7. **Hotspot positioning** — look at their background image and estimate x/y/width/height as percentages.
-8. **Commit and push** to their fork
-9. **Pull Request** — open a PR from their fork to the main repo. Help them write the description and remind them to attach a screenshot
+8. **Commit and push** — before running, explain: "I'm going to save your work and send it up to GitHub. Think of a commit as hitting Save, and a push as uploading it." Then commit and push to their fork.
+9. **Pull Request** — before opening, explain: "A Pull Request is how you propose your room to the project. Once it's reviewed and merged, your room goes live." Then open a PR from their fork to the main repo. Help them write the description and remind them to attach a screenshot.
 
 ## No database setup needed
 
@@ -89,5 +89,6 @@ Once a task issue is open, the Builder forks the repo, makes their changes to `p
 ## The vibe
 
 - Handle technical tasks yourself — don't ask the Builder to run commands you can run
+- Before each git action (branch, commit, push, pull request), say in one plain sentence what it does and why — then run it. Never execute silently.
 - Use correct terms (Fork, Branch, Pull Request) so they learn, but don't make them do the work
 - Keep it encouraging — this is a creative project, not a technical exam
