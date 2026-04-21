@@ -28,11 +28,17 @@ function OpenRoomInner() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [reserving, setReserving] = useState<{ x: number; y: number } | null>(null);
   const [successRoom, setSuccessRoom] = useState<{ room: any; roomId: string } | null>(null);
+  const [connectionError, setConnectionError] = useState(false);
 
   const refreshRooms = useCallback(async () => {
-    const { data } = await supabase!.from('rooms').select('*').neq('status', 'deleted');
+    const { data, error } = await supabase!.from('rooms').select('*').neq('status', 'deleted');
+    if (error) {
+      setConnectionError(true);
+      return;
+    }
+    setConnectionError(false);
     let roomList = data || [];
-    
+
     // Check for the center piece: The Common Room
     const commonRoom = roomList.find(r => r.grid_x === 0 && r.grid_y === 0);
     if (!commonRoom) {
@@ -63,7 +69,13 @@ function OpenRoomInner() {
           setRooms(prev => [...prev, payload.new]);
         }
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          setConnectionError(true);
+        } else if (status === 'SUBSCRIBED') {
+          setConnectionError(false);
+        }
+      });
 
     return () => { supabase!.removeChannel(channel); };
   }, [refreshRooms]);
@@ -148,6 +160,14 @@ function OpenRoomInner() {
           </button>
         </div>
       </div>
+
+      {connectionError && (
+        <div className="shrink-0 mx-auto mb-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-xs font-medium flex items-center gap-2">
+          <span>⚠</span>
+          <span>Connection issue — floor plan may be out of date.</span>
+          <button onClick={refreshRooms} className="underline font-bold hover:text-amber-900">Retry</button>
+        </div>
+      )}
 
       <FloorPlanCanvas>
       <div
