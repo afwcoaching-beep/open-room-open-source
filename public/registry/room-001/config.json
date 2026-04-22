@@ -7,10 +7,10 @@
     {
       "id": "welcome-book",
       "label": "Welcome Book",
-      "x": 7,
-      "y": 68,
-      "width": 12,
-      "height": 15,
+      "x": 10,
+      "y": 70,
+      "width": 10,
+      "height": 10,
       "action": "open_modal",
       "modal": "welcome_guide"
     },
@@ -43,16 +43,6 @@
       "height": 40,
       "action": "open_modal",
       "modal": "waitlist"
-    },
-    {
-      "id": "anchors-slides",
-      "label": "Open Room Anchors",
-      "x": 25,
-      "y": 65,
-      "width": 10,
-      "height": 10,
-      "action": "open_url",
-      "url": "https://alyssafuward.github.io/open-room-open-source/open-room-anchors.html"
     },
     {
       "id": "exit-door",
