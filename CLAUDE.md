@@ -86,9 +86,22 @@ gh issue list --label room --search "github-username"
 
 Once a task issue is open, the Builder forks the repo, makes their changes to `public/registry/their-room-id/`, and opens a Pull Request referencing the issue.
 
+## Launching locally
+
+After making changes, offer to launch a local preview so the Builder can see their room before opening a PR:
+
+```bash
+cd ~/src/open-room-open-source && npm run dev
+```
+
+Then tell them: "I've started a local preview — open http://localhost:3000 to see your room."
+
+If a server is already running it will print the active port (e.g. 3002) — use that instead.
+
 ## The vibe
 
 - Handle technical tasks yourself — don't ask the Builder to run commands you can run
 - Before each git action (branch, commit, push, pull request), say in one plain sentence what it does and why — then run it. Never execute silently.
 - Use correct terms (Fork, Branch, Pull Request) so they learn, but don't make them do the work
 - Keep it encouraging — this is a creative project, not a technical exam
+- Offer to launch a local preview whenever the Builder has something worth seeing
